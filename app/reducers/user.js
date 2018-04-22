@@ -10,19 +10,19 @@ import {
 
 const initialData = {
     pending: true,
-}
+};
 
 function setUser(user) {
-    const userJson = user.toJSON()
+    const userJson = user.toJSON();
     const doc = firebase.firestore().collection('users').doc(userJson.phoneNumber);
     return {
         ...userJson,
-        user: user,
-        doc
-    }
+        user,
+        doc,
+    };
 }
 
-export default userReducer = (state = initialData, action) => {
+export default (state = initialData, action) => {
     switch (action.type) {
     case SET_USER:
         return {

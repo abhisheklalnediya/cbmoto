@@ -16,9 +16,13 @@ class ProfilePage extends Component {
     }
     componentDidMount() {
         this.unsubscribe = this.props.user.doc.onSnapshot((documentSnapshot) => {
-            console.log('document Updated', documentSnapshot.data());
             this.setState({ ...documentSnapshot.data() });
         });
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.state.gotoDash && !nextProps.user.pending) {
+            this.props.navigation.push('Dashboard');
+        }
     }
     componentWillUnmount() {
         this.unsubscribe();
@@ -28,11 +32,11 @@ class ProfilePage extends Component {
             profilePic: this.state.profilePic,
             displayName: this.state.displayName || this.state.phoneNumber,
         }));
+        this.setState({ gotoDash: true });
     }
     render() {
         const { displayName } = this.state;
         const { user } = this.props;
-        console.log(this.state);
         return (
             <View style={styles.container}>
                 <View style={{height: 150, width: 150}}>

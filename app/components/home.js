@@ -30,6 +30,7 @@ class Home extends Component {
     componentDidMount() {
         this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (user) {
+                console.log('here')
                 this.props.dispatch(UserActions.setUser(user));
                 this.props.dispatch(UserActions.reloadUser());
                 this.props.dispatch(UserActions.updateProfile({
@@ -39,11 +40,25 @@ class Home extends Component {
                     displayName: user.displayName,
                     message: 'Welcome',
                 });
-                this.props.navigation.push('Profile');
             } else {
                 this.props.dispatch(UserActions.clearUser());
             }
         });
+    }
+    componentWillReceiveProps(nextProps) {
+
+        if (!this.props.user.doc && nextProps.user.doc) {
+            nextProps.user.doc.get().then((ds) => {
+                if (ds.data().displayName) {
+                    this.props.navigation.push('Dashboard');
+                } else {
+                    this.props.navigation.push('Profile');
+                }
+            }).catch(e => console.log(e));
+        }
+    }
+    componentWillUnmount() {
+        this.unsubscribe();
     }
     confirmCode() {
         const { codeInput, confirmResult } = this.state;
@@ -121,7 +136,6 @@ class Home extends Component {
     render() {
         const { confirmResult } = this.state;
         const { user } = this.props.user;
-        console.log(user);
         return (
             <View style={styles.container}>
                 <Text style={styles.brand}>CB-MOTO</Text>

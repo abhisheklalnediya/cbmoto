@@ -5,7 +5,7 @@ import {
     RELOAD_USER,
     CLEAR_USER,
     UPDATE_PROFILE,
-} from './actionTypes'
+} from './actionTypes';
 
 import store from '../store';
 
